@@ -73,7 +73,7 @@ func main() {
 		}
 		for i:=0;i<len(dnsQuery.Question);i++{
 			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
-				Domain: dnsQuery.Answer[i].Domain,
+				Domain: dnsQuery.Question[i].Question,
 				Type: 1,
 				Class: 1,
 				TTL:60,
