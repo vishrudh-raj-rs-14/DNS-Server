@@ -3,7 +3,10 @@ package dns
 import (
 	"encoding/binary"
 	"fmt"
+	"strconv"
 	"strings"
+
+	"github.com/hashicorp/hcl/hcl/strconv"
 )
 
 type DNSMessage struct {
@@ -115,9 +118,8 @@ func encodeData(domain string) []byte{
 	names := strings.Split(domain, ".");
 	var res []byte;
 	for i:=0;i<len(names);i++{
-		for j:=0;j<len(names[i]);j++{
-			res = append(res, byte(names[i][j]));
-		}
+		num, _ := strconv.Atoi(names[i])
+		res = append(res, byte(num));
 	}
 	return res;
 }
