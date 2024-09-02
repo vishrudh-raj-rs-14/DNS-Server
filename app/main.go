@@ -16,7 +16,8 @@ func main() {
 	fmt.Println("Logs from your program will appear here!")
 
 	// Uncomment this block to pass the first stage
-	Resolver := flag.String("resolver", "8.8.8.8", "database directory")
+	Resolver := flag.String("resolver", "8.8.8.8:80", "resolver directory")
+	flag.Parse()
 	resolverUdp, err := net.ResolveUDPAddr("udp", *Resolver)
 	if err != nil {
 		fmt.Println("Failed to resolve UDP address:", err)
