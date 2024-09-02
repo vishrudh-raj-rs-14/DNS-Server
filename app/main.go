@@ -86,6 +86,7 @@ func main() {
 				fmt.Println("empty")
 			}
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
+			time.Sleep(500*time.Millisecond)
 		}
 
 		rcode:=0;
