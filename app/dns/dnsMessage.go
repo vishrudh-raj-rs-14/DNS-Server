@@ -35,13 +35,19 @@ type Question struct{
 
 }
 type Answer struct {
-
+	Domain string;
+	Class int;
+	Type int;
+	TTL int;
+	Len int;
+	Data string;
 }
 type Authority struct{
 
 }
 
 func (msg *DNSMessage) ParseMsg() []byte {
+	//Header
 	buf := make([]byte, 12);
     binary.BigEndian.PutUint16(buf[0:2], msg.Header.ID)
     buf[2] = msg.Header.QR<<7 | (msg.Header.OpCode&0xF)<<3 | msg.Header.AA<<2 | msg.Header.TC<<1 | msg.Header.RD
@@ -50,6 +56,8 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[6:8], msg.Header.ANCount)
     binary.BigEndian.PutUint16(buf[8:10], msg.Header.NSCount)
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
+
+	//Question
 	stringEncoding := encodeString(msg.Question.Question);
 	buf = append(buf, stringEncoding...);
 	byteArray := make([]byte, 2) 
@@ -58,6 +66,23 @@ func (msg *DNSMessage) ParseMsg() []byte {
 	byteArray = make([]byte, 2) 
 	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question.Class))
 	buf = append(buf, byteArray...)
+
+	//Answer
+	stringEncoding = encodeString(msg.Answer.Domain);
+	buf = append(buf, stringEncoding...);
+	byteArray = make([]byte, 2) 
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Type))
+	buf = append(buf, byteArray...)
+	byteArray = make([]byte, 2) 
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Class))
+	buf = append(buf, byteArray...)
+	byteArray = make([]byte, 4) 
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.TTL))
+	buf = append(buf, byteArray...)
+	byteArray = make([]byte, 2) 
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Len))
+	buf = append(buf, byteArray...)
+	buf = append(buf, encodeData(msg.Answer.Data)...)
     return buf
 }
 
@@ -74,5 +99,16 @@ func encodeString(domain string) []byte{
 	}
 	res = append(res, byte('\x00'));
 	
+	return res;
+}
+
+func encodeData(domain string) []byte{
+	names := strings.Split(domain, ".");
+	var res []byte;
+	for i:=0;i<len(names);i++{
+		for j:=0;j<len(names[i]);j++{
+			res = append(res, byte(names[i][j]));
+		}
+	}
 	return res;
 }

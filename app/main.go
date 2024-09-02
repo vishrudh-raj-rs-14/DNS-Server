@@ -62,6 +62,15 @@ func main() {
 			Question: "codecrafters.io",
 			Type: 1,
 			Class: 1,
+			
+		}
+		dnsMessage.Answer = dns.Answer{
+			Domain: "codecrafters.io",
+			Type: 1,
+			Class: 1,
+			TTL:60,
+			Len:4,
+			Data:"8.8.8.8",
 		}
 		response := dnsMessage.ParseMsg();
 		
