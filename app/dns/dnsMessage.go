@@ -42,7 +42,7 @@ type Answer struct {
 	Type int;
 	TTL int;
 	Len int;
-	Data string;
+	Data []byte;
 }
 type Authority struct{
 
@@ -91,7 +91,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
 		byteArray = make([]byte, 2) 
 		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].Len))
 		buf = append(buf, byteArray...)
-		buf = append(buf, encodeData(msg.Answer[i].Data)...)
+		buf = append(buf, (msg.Answer[i].Data)...)
 	}
     return buf
 }
@@ -181,7 +181,7 @@ func parseDNSAnswer(data []byte, offset int) (Answer, int) {
         Class:    ansClass,
         TTL:      ttl,
         Len: rdLength,
-        Data:    ipAddress,
+        Data:    []byte(rData),
     }, newOffset + 10 + int(rdLength)
 }
 
