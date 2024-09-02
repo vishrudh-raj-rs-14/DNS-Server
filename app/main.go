@@ -74,10 +74,10 @@ func main() {
 				Class: 1,
 			},)	
 		}
-		for i:=0;i<len(dnsQuery.Question);i++{
-			fmt.Println(dnsQuery.Question[i].Question);
+		// for i:=0;i<len(dnsQuery.Question);i++{
+			// fmt.Println(dnsQuery.Question[i].Question);
 			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
-				Domain: dnsQuery.Question[i].Question,
+				Domain: dnsQuery.Question[0].Question,
 				Type: 1,
 				Class: 1,
 				TTL:60,
