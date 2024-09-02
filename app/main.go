@@ -65,6 +65,8 @@ func main() {
 		}
 		dnsMessage.Question = []dns.Question{
 		}
+		dnsMessage.Answer = []dns.Answer{
+		}
 		for i:=0;i<len(dnsQuery.Question);i++{
 			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
 				Question: dnsQuery.Question[i].Question,
