@@ -141,10 +141,11 @@ func parseDNSHeader(data []byte) Header {
 }
 
 func parseDNSQuestion(data []byte, offset int) (Question, int) {
-	// if(data[offset]>>6 == 3){
-	// 	newOffSet := binary.BigEndian.Uint16((data[offset:offset+2])) ^ 49152;
-	// 	return parseDNSQuestion(data, int(newOffSet));
-	// }
+	if(data[offset]>>6 == 3){
+		newOffSet := binary.BigEndian.Uint16((data[offset:offset+2])) ^ 49152;
+		ques, _ := parseDNSQuestion(data, int(newOffSet));
+		return ques, int(newOffSet)+6
+	}
 	fmt.Println(offset)
     qName, newOffset := parseQName(data, offset)
 	fmt.Println(qName,  newOffset + 4)
