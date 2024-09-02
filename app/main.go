@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 
@@ -15,11 +16,20 @@ func main() {
 	fmt.Println("Logs from your program will appear here!")
 
 	// Uncomment this block to pass the first stage
-	
+	Resolver := flag.String("resolver", "8.8.8.8", "database directory")
+	resolverUdp, err := net.ResolveUDPAddr("udp", *Resolver)
+	if err != nil {
+		fmt.Println("Failed to resolve UDP address:", err)
+		return
+	}
 	udpAddr, err := net.ResolveUDPAddr("udp", "127.0.0.1:2053")
 	if err != nil {
 		fmt.Println("Failed to resolve UDP address:", err)
 		return
+	}
+	conn, err := net.DialUDP("udp", nil, resolverUdp)
+	if err!=nil{
+		panic("Could not connect to resolver server")
 	}
 	
 	udpConn, err := net.ListenUDP("udp", udpAddr)
@@ -43,6 +53,26 @@ func main() {
 		dnsQuery := dns.ParseDNSMessage(buf);
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
+		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
+			dnsQueryCopy := dnsQuery;
+			dnsQueryCopy.Question = dnsQuery.Question[i:i+1]
+			dnsQueryCopy.Header.QDCount = 1;
+			req := dnsQueryCopy.ParseMsg()
+			_, err := conn.Write(req);
+			if(err!=nil){
+				fmt.Println("Error sending:", err)
+				return
+			}
+			res := make([]byte, 512)
+			_, err = conn.Read(res)
+			if err != nil {
+				fmt.Println("Error receiving:", err)
+				return
+			}
+			resVal := dns.ParseDNSMessage(res);
+			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
+		}
+
 		fmt.Println(dnsQuery.Answer)
 		rcode:=0;
 		if(dnsQuery.Header.OpCode!=0){
@@ -84,9 +114,7 @@ func main() {
 				Len:4,
 				Data:"8.8.8.8",},)	
 		}
-		fmt.Println("here 1")
 		response := dnsMessage.ParseMsg();
-		fmt.Println("here 2")
 
 		
 		_, err = udpConn.WriteToUDP(response, source)
