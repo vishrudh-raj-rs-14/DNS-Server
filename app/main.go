@@ -85,6 +85,16 @@ func main() {
 		if(dnsQuery.Header.OpCode!=0){
 			rcode=4;
 		}
+		
+		dnsMessage.Question = []dns.Question{
+		}
+		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
+			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
+				Question: dnsQuery.Question[i].Question,
+				Type: 1,
+				Class: 1,
+			},)	
+		}
 		dnsMessage.Header = dns.Header{
 			ID: dnsQuery.Header.ID,
 			QR: 1,
@@ -95,21 +105,11 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: uint8(rcode),
-			QDCount: dnsQuery.Header.QDCount,
-			ANCount: dnsQuery.Header.QDCount,
+			QDCount: uint16(len(dnsMessage.Question)),
+			ANCount: uint16(len(dnsMessage.Answer)),
 			NSCount: 0,
 			ARCount: 0,
 		}
-		dnsMessage.Question = []dns.Question{
-		}
-		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
-			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
-				Question: dnsQuery.Question[i].Question,
-				Type: 1,
-				Class: 1,
-			},)	
-		}
-
 		// for i:=0;i<len(dnsQuery.Question);i++{
 		// 	fmt.Println(dnsQuery.Question[i].Question);
 		// 	dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{

@@ -60,7 +60,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
 	//Question
 	// fmt.Println("-----------")
 	// fmt.Println(msg.Question)
-	for i:=0;i<int(msg.Header.QDCount);i++{
+	for i:=0;i<len(msg.Question);i++{
 		stringEncoding := encodeString(msg.Question[i].Question);
 		buf = append(buf, stringEncoding...);
 		byteArray := make([]byte, 2) 
@@ -74,7 +74,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
 	//Answer
 	// fmt.Println("-----------")
 	// fmt.Println(msg.Answer)
-	for i:=0;i<int(msg.Header.ANCount);i++{
+	for i:=0;i<len(msg.Answer);i++{
 		stringEncoding := encodeString(msg.Answer[i].Domain);
 		buf = append(buf, stringEncoding...);
 		byteArray := make([]byte, 2) 
