@@ -30,6 +30,7 @@ func main() {
 		fmt.Println("Failed to resolve UDP address:", err)
 		return
 	}
+	conn, err := net.DialUDP("udp", nil, resolverUdp)
 	if err!=nil{
 		panic("Could not connect to resolver server")
 	}
@@ -66,8 +67,7 @@ func main() {
 			dnsQueryCopy.Header.ID = uint16(int(dnsQueryCopy.Header.ID) + 1)
 			fmt.Println(len(dnsQueryCopy.Question))
 			req := dnsQueryCopy.ParseMsg()
-			conn, err := net.DialUDP("udp", nil, resolverUdp)
-			_, err = conn.Write(req);
+			_, err := conn.Write(req);
 			if(err!=nil){
 				fmt.Println("Error sending:", err)
 				return
@@ -78,6 +78,7 @@ func main() {
 				fmt.Println("Error receiving:", err)
 				return
 			}
+			fmt.Println(res)
 			resVal := dns.ParseDNSMessage(res);
 			fmt.Println(resVal.Header.QDCount, " - ", resVal.Header.ANCount)
 			if(len(resVal.Answer)>0){
@@ -86,7 +87,6 @@ func main() {
 				fmt.Println("empty")
 			}
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
-			conn.Close()
 		}
 
 		rcode:=0;
