@@ -65,7 +65,11 @@ func main() {
 			dnsQueryCopy.Header.QDCount = 1;
 			dnsQueryCopy.Header.ANCount = 0;
 			dnsQueryCopy.Header.ID = uint16(int(dnsQueryCopy.Header.ID) + 1)
+			if(dnsQueryCopy.Question[0].Question=="def."){
+				dnsQueryCopy.Question[0].Question = "def.longassdomainname.com"
+			}
 			fmt.Println((dnsQueryCopy.Question[0].Question))
+
 			req := dnsQueryCopy.ParseMsg()
 			_, err := conn.Write(req);
 			if(err!=nil){
