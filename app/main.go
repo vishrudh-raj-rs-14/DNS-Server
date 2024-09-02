@@ -74,6 +74,7 @@ func main() {
 				fmt.Println("Error receiving:", err)
 				return
 			}
+			fmt.Println("--------")
 			resVal := dns.ParseDNSMessage(res);
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
 		}
