@@ -54,7 +54,6 @@ func main() {
 		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
 		fmt.Println()
 		dnsQuery := dns.ParseDNSMessage(buf);
-		fmt.Println("here1")
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
 		dnsMessage.Answer = []dns.Answer{
@@ -67,7 +66,6 @@ func main() {
 			dnsQueryCopy.Header.ID = uint16(int(dnsQueryCopy.Header.ID))
 			fmt.Println(dnsQueryCopy)
 			req := dnsQueryCopy.ParseMsg()
-			fmt.Println("----------")
 			_, err := conn.Write(req);
 			if(err!=nil){
 				fmt.Println("Error sending:", err)
@@ -79,11 +77,9 @@ func main() {
 				fmt.Println("Error receiving:", err)
 				return
 			}
-			fmt.Println("--------")
 			resVal := dns.ParseDNSMessage(res);
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
 		}
-		fmt.Println("here2")
 
 		rcode:=0;
 		if(dnsQuery.Header.OpCode!=0){
@@ -106,7 +102,6 @@ func main() {
 		}
 		dnsMessage.Question = []dns.Question{
 		}
-		fmt.Println("here3")
 		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
 			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
 				Question: dnsQuery.Question[i].Question,
@@ -114,7 +109,6 @@ func main() {
 				Class: 1,
 			},)	
 		}
-		fmt.Println("here4")
 
 		// for i:=0;i<len(dnsQuery.Question);i++{
 		// 	fmt.Println(dnsQuery.Question[i].Question);
