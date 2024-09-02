@@ -80,6 +80,7 @@ func main() {
 			}
 			resVal := dns.ParseDNSMessage(res);
 			fmt.Println(resVal.Header.QDCount, " - ", resVal.Header.ANCount)
+			fmt.Println(resVal.Question[0].Question, " - ", resVal.Answer[0].Data)
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
 		}
 
