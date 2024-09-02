@@ -51,7 +51,8 @@ func main() {
 		}
 	
 		receivedData := string(buf[:size])
-		fmt.Println("Received %d bytes from %s: %s\n", size, source, receivedData)
+		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
+		fmt.Println()
 		dnsQuery := dns.ParseDNSMessage(buf);
 		fmt.Println("here1")
 		// Create an empty response
