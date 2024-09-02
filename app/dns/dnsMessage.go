@@ -152,7 +152,7 @@ func parseQName(data []byte, offset int) (string, int) {
         qName += string(data[offset:offset+length]) + "."
         offset += length
     }
-    return qName, offset + 1
+    return qName[:len(qName)-1], offset + 1
 }
 
 func parseDNSAnswer(data []byte, offset int) (Answer, int) {
