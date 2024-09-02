@@ -146,7 +146,7 @@ func parseDNSQuestion(data []byte, offset int) (Question, int) {
 		return parseDNSQuestion(data, int(newOffSet));
 	}
     qName, newOffset := parseQName(data, offset)
-	fmt.Println(qName)
+	fmt.Println(qName,  newOffset + 4)
     qType := int(binary.BigEndian.Uint16(data[newOffset : newOffset+2]))
     qClass := int(binary.BigEndian.Uint16(data[newOffset+2 : newOffset+4]))
     return Question{Question: qName, Type: qType, Class: qClass}, newOffset + 4
