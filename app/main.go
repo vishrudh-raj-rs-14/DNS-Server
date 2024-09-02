@@ -64,7 +64,7 @@ func main() {
 			dnsQueryCopy.Question = dnsQuery.Question[i:i+1]
 			dnsQueryCopy.Header.QDCount = 1;
 			dnsQueryCopy.Header.ANCount = 0;
-			dnsQueryCopy.Header.ID = uint16(int(dnsQueryCopy.Header.ID)+i+1)
+			dnsQueryCopy.Header.ID = uint16(int(dnsQueryCopy.Header.ID))
 			fmt.Println(dnsQueryCopy)
 			req := dnsQueryCopy.ParseMsg()
 			fmt.Println("----------")
@@ -106,14 +106,16 @@ func main() {
 		}
 		dnsMessage.Question = []dns.Question{
 		}
-	
-		for i:=0;i<len(dnsQuery.Question);i++{
+		fmt.Println("here3")
+		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
 			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
 				Question: dnsQuery.Question[i].Question,
 				Type: 1,
 				Class: 1,
 			},)	
 		}
+		fmt.Println("here4")
+
 		// for i:=0;i<len(dnsQuery.Question);i++{
 		// 	fmt.Println(dnsQuery.Question[i].Question);
 		// 	dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
