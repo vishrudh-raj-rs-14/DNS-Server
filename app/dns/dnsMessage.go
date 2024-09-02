@@ -48,7 +48,7 @@ type Authority struct{
 
 }
 
-func (msg *DNSMessage) ParseMsg() []byte {
+func (msg DNSMessage) ParseMsg() []byte {
 	//Header
 	buf := make([]byte, 12);
     binary.BigEndian.PutUint16(buf[0:2], msg.Header.ID)
@@ -189,6 +189,7 @@ func ParseDNSMessage(data []byte) DNSMessage {
     offset := 12
 
     // Parse questions
+	fmt.Println(header.QDCount)
     questions := make([]Question, header.QDCount)
     for i := 0; i < int(header.QDCount); i++ {
 		questions[i], offset = parseDNSQuestion(data, offset)
