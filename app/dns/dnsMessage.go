@@ -180,7 +180,7 @@ func parseDNSAnswer(data []byte, offset int) (Answer, int) {
         Type:     ansType,
         Class:    ansClass,
         TTL:      ttl,
-        Len: len(ipAddress),
+        Len: rdLength,
         Data:    ipAddress,
     }, newOffset + 10 + int(rdLength)
 }
