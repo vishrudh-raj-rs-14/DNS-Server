@@ -1,6 +1,9 @@
 package dns
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"strings"
+)
 
 type DNSMessage struct {
 	Header Header;
@@ -44,5 +47,27 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[6:8], msg.Header.ANCount)
     binary.BigEndian.PutUint16(buf[8:10], msg.Header.NSCount)
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
+	stringEncoding := encodeString("codecrafters.io");
+	buf = append(buf, stringEncoding...);
+	byteArray := make([]byte, 2) 
+	binary.BigEndian.PutUint16(byteArray, 1)
+	buf = append(buf, byteArray...)
+	buf = append(buf, byteArray...)
     return buf
+}
+
+
+func encodeString(domain string) []byte{
+	names := strings.Split(domain, ".");
+	var res []byte;
+	for i:=0;i<len(names);i++{
+		val := uint8(len(names[i]));
+		res = append(res, val);
+		for j:=0;j<len(names[i]);j++{
+			res = append(res, byte(names[i][j]));
+		}
+	}
+	res = append(res, byte('\x00'));
+	
+	return res;
 }
