@@ -59,7 +59,7 @@ func main() {
 			ARCount: 0,
 		}
 		dnsMessage.Question = []dns.Question{{
-			Question: dnsQuery.Question[0].Question,
+			Question: "codecrafters.io",
 			Type: 1,
 			Class: 1,
 		},	
