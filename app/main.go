@@ -73,12 +73,11 @@ func main() {
 				return
 			}
 			res := make([]byte, 512)
-			_ , err = conn.Read(res)
+			_ , _, err = conn.ReadFromUDP(res)
 			if err != nil {
 				fmt.Println("Error receiving:", err)
 				return
 			}
-			fmt.Println(res)
 			resVal := dns.ParseDNSMessage(res);
 			fmt.Println(resVal.Header.QDCount, " - ", resVal.Header.ANCount)
 			if(len(resVal.Answer)>0){
