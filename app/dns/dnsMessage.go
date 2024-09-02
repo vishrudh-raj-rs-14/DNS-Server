@@ -59,6 +59,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
 
 	//Question
+	fmt.Println(msg.Question[0])
 	stringEncoding := encodeString(msg.Question[0].Question);
 	buf = append(buf, stringEncoding...);
 	byteArray := make([]byte, 2) 
