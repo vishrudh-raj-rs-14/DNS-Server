@@ -54,7 +54,7 @@ func main() {
 			Z: 0,
 			RCode: 0,
 			QDCount: 1,
-			ANCount: 0,
+			ANCount: 1,
 			NSCount: 0,
 			ARCount: 0,
 		}
