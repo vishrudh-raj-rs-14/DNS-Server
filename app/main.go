@@ -57,6 +57,8 @@ func main() {
 		fmt.Println("here1")
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
+		dnsMessage.Answer = []dns.Answer{
+		}
 		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
 			dnsQueryCopy := dnsQuery;
 			dnsQueryCopy.Question = dnsQuery.Question[i:i+1]
@@ -104,8 +106,7 @@ func main() {
 		}
 		dnsMessage.Question = []dns.Question{
 		}
-		dnsMessage.Answer = []dns.Answer{
-		}
+	
 		for i:=0;i<len(dnsQuery.Question);i++{
 			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
 				Question: dnsQuery.Question[i].Question,
@@ -113,16 +114,16 @@ func main() {
 				Class: 1,
 			},)	
 		}
-		for i:=0;i<len(dnsQuery.Question);i++{
-			fmt.Println(dnsQuery.Question[i].Question);
-			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
-				Domain: dnsQuery.Question[i].Question,
-				Type: 1,
-				Class: 1,
-				TTL:60,
-				Len:4,
-				Data:"8.8.8.8",},)	
-		}
+		// for i:=0;i<len(dnsQuery.Question);i++{
+		// 	fmt.Println(dnsQuery.Question[i].Question);
+		// 	dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
+		// 		Domain: dnsQuery.Question[i].Question,
+		// 		Type: 1,
+		// 		Class: 1,
+		// 		TTL:60,
+		// 		Len:4,
+		// 		Data:"8.8.8.8",},)	
+		// }
 		response := dnsMessage.ParseMsg();
 
 		
