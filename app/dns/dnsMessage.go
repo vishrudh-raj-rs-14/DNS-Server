@@ -163,7 +163,7 @@ func parseQName(data []byte, offset int) (string, int) {
 			len := int(data[newOffSet])
 			fmt.Println(len)
 			newOffSet++;
-			qName += string(data[offset:offset+len]) + "."
+			qName += string(data[int(newOffSet):int(newOffSet)+len]) + "."
         	offset += 2
 		}
 		fmt.Println(offset, length, qName)
