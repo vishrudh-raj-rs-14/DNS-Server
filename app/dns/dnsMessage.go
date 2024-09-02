@@ -70,7 +70,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
 	}
 
 	//Answer
-	for i:=0;i<int(msg.Header.QDCount);i++{
+	for i:=0;i<int(msg.Header.ANCount);i++{
 		stringEncoding := encodeString(msg.Answer[i].Domain);
 		buf = append(buf, stringEncoding...);
 		byteArray := make([]byte, 2) 
@@ -85,7 +85,7 @@ func (msg *DNSMessage) ParseMsg() []byte {
 		byteArray = make([]byte, 2) 
 		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].Len))
 		buf = append(buf, byteArray...)
-		buf = append(buf, encodeData(msg.Answer[0].Data)...)
+		buf = append(buf, encodeData(msg.Answer[i].Data)...)
 	}
     return buf
 }
