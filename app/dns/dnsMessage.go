@@ -157,6 +157,7 @@ func parseQName(data []byte, offset int) (string, int) {
     var qName string
     for {
         length := int(data[offset])
+		fmt.Println(offset, length, qName)
         if length == 0 {
             break
         }
