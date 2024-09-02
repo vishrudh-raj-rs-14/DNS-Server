@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/hashicorp/hcl/hcl/strconv"
 )
 
 type DNSMessage struct {
