@@ -173,14 +173,14 @@ func parseDNSAnswer(data []byte, offset int) (Answer, int) {
     rdLength := int(binary.BigEndian.Uint16(data[newOffset+8 : newOffset+10]))
     rData := string(data[newOffset+10 : newOffset+10+int(rdLength)])
 	fmt.Println(rData)
-	ipAddress := fmt.Sprintf("%d.%d.%d.%d", rData[3], rData[2], rData[1], rData[0])
+	ipAddress := fmt.Sprintf("%d.%d.%d.%d", rData[0], rData[1], rData[2], rData[3])
 	fmt.Println(ipAddress)
     return Answer{
         Domain:     name,
         Type:     ansType,
         Class:    ansClass,
         TTL:      ttl,
-        Len: rdLength,
+        Len: len(ipAddress),
         Data:    ipAddress,
     }, newOffset + 10 + int(rdLength)
 }
