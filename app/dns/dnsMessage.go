@@ -160,11 +160,8 @@ func parseQName(data []byte, offset int) (string, int) {
         length := int(data[offset])
 		if(length>>6 == 3){
 			newOffSet := binary.BigEndian.Uint16((data[offset:offset+2])) ^ 49152;
-			len := int(data[newOffSet])
-			fmt.Println(len)
-			newOffSet++;
-			qName += string(data[int(newOffSet):int(newOffSet)+len]) + "."
-        	offset += 2
+			s, _ := parseQName(data, int(newOffSet))
+			qName += s;
 		}
 		fmt.Println(offset, length, qName)
         if length == 0 {
