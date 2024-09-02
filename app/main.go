@@ -57,8 +57,8 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: uint8(rcode),
-			QDCount: uint16(len(dnsQuery.Question)),
-			ANCount: uint16(len(dnsQuery.Question)),
+			QDCount: 2,
+			ANCount: 2,
 			NSCount: 0,
 			ARCount: 0,
 		}
