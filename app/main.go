@@ -43,6 +43,7 @@ func main() {
 		dnsQuery := dns.ParseDNSMessage(buf);
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
+		fmt.Println(dnsQuery.Answer)
 		rcode:=0;
 		if(dnsQuery.Header.OpCode!=0){
 			rcode=4;
@@ -57,8 +58,8 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: uint8(rcode),
-			QDCount: 2,
-			ANCount: 2,
+			QDCount: dnsMessage.Header.QDCount,
+			ANCount: dnsMessage.Header.QDCount,
 			NSCount: 0,
 			ARCount: 0,
 		}
