@@ -74,8 +74,8 @@ func main() {
 				Class: 1,
 			},)	
 		}
-		// for i:=0;i<len(dnsQuery.Question);i++{
-			// fmt.Println(dnsQuery.Question[i].Question);
+		for i:=0;i<len(dnsQuery.Question);i++{
+			fmt.Println(dnsQuery.Question[i].Question);
 			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
 				Domain: dnsQuery.Question[0].Question,
 				Type: 1,
@@ -83,8 +83,11 @@ func main() {
 				TTL:60,
 				Len:4,
 				Data:"8.8.8.8",},)	
-		// }
+		}
+		fmt.Println("here 1")
 		response := dnsMessage.ParseMsg();
+		fmt.Println("here 2")
+
 		
 		_, err = udpConn.WriteToUDP(response, source)
 		if err != nil {
