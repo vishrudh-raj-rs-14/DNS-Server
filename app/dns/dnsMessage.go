@@ -59,33 +59,36 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
 
 	//Question
-	fmt.Println(msg.Question[0])
-	stringEncoding := encodeString(msg.Question[0].Question);
-	buf = append(buf, stringEncoding...);
-	byteArray := make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[0].Type))
-	buf = append(buf, byteArray...)
-	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[0].Class))
-	buf = append(buf, byteArray...)
+	for i:=0;i<int(msg.Header.QDCount);i++{
+		stringEncoding := encodeString(msg.Question[i].Question);
+		buf = append(buf, stringEncoding...);
+		byteArray := make([]byte, 2) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[i].Type))
+		buf = append(buf, byteArray...)
+		byteArray = make([]byte, 2) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[i].Class))
+		buf = append(buf, byteArray...)
+	}
 
 	//Answer
-	fmt.Println(msg.Answer[0])
-	stringEncoding = encodeString(msg.Answer[0].Domain);
-	buf = append(buf, stringEncoding...);
-	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Type))
-	buf = append(buf, byteArray...)
-	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Class))
-	buf = append(buf, byteArray...)
-	byteArray = make([]byte, 4) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].TTL))
-	buf = append(buf, byteArray...)
-	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Len))
-	buf = append(buf, byteArray...)
-	buf = append(buf, encodeData(msg.Answer[0].Data)...)
+	for i:=0;i<int(msg.Header.QDCount);i++{
+		fmt.Println(msg.Answer[0])
+		stringEncoding := encodeString(msg.Answer[i].Domain);
+		buf = append(buf, stringEncoding...);
+		byteArray := make([]byte, 2) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].Type))
+		buf = append(buf, byteArray...)
+		byteArray = make([]byte, 2) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].Class))
+		buf = append(buf, byteArray...)
+		byteArray = make([]byte, 4) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].TTL))
+		buf = append(buf, byteArray...)
+		byteArray = make([]byte, 2) 
+		binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[i].Len))
+		buf = append(buf, byteArray...)
+		buf = append(buf, encodeData(msg.Answer[0].Data)...)
+	}
     return buf
 }
 
