@@ -43,6 +43,10 @@ func main() {
 		dnsQuery := dns.ParseDNSMessage(buf);
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
+		rcode:=0;
+		if(dnsQuery.Header.OpCode!=0){
+			rcode=4;
+		}
 		dnsMessage.Header = dns.Header{
 			ID: dnsQuery.Header.ID,
 			QR: 1,
@@ -52,7 +56,7 @@ func main() {
 			RD: dnsQuery.Header.RD,
 			RA: 0,
 			Z: 0,
-			RCode: 0,
+			RCode: uint8(rcode),
 			QDCount: 1,
 			ANCount: 1,
 			NSCount: 0,
