@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/codecrafters-io/dns-server-starter-go/app/dns"
 )
@@ -125,6 +126,7 @@ func main() {
 
 		
 		_, err = udpConn.WriteToUDP(response, source)
+		time.Sleep(500*time.Millisecond)
 		if err != nil {
 			fmt.Println("Failed to send response:", err)
 		}
