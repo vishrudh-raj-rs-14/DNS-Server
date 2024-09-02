@@ -81,6 +81,7 @@ func main() {
 			resVal := dns.ParseDNSMessage(res);
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
 		}
+		fmt.Println("here2")
 
 		rcode:=0;
 		if(dnsQuery.Header.OpCode!=0){
@@ -111,6 +112,16 @@ func main() {
 				Type: 1,
 				Class: 1,
 			},)	
+		}
+		for i:=0;i<len(dnsQuery.Question);i++{
+			fmt.Println(dnsQuery.Question[i].Question);
+			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
+				Domain: dnsQuery.Question[i].Question,
+				Type: 1,
+				Class: 1,
+				TTL:60,
+				Len:4,
+				Data:"8.8.8.8",},)	
 		}
 		response := dnsMessage.ParseMsg();
 
