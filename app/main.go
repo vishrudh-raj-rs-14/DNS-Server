@@ -83,7 +83,7 @@ func main() {
 				TTL:60,
 				Len:4,
 				Data:"8.8.8.8",},)	
-		}
+		// }
 		response := dnsMessage.ParseMsg();
 		
 		_, err = udpConn.WriteToUDP(response, source)
