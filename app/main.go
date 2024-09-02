@@ -17,7 +17,7 @@ func main() {
 	fmt.Println("Logs from your program will appear here!")
 
 	// Uncomment this block to pass the first stage
-	Resolver := flag.String("resolver", "8.8.8.8:80", "resolver directory")
+	Resolver := flag.String("resolver", "8.8.8.8:53", "resolver directory")
 	flag.Parse()
 	fmt.Println("resolver - ", *Resolver)
 	resolverUdp, err := net.ResolveUDPAddr("udp", *Resolver)
@@ -77,7 +77,10 @@ func main() {
 				return
 			}
 			res := make([]byte, 512)
+			fmt.Println("here")
 			_ , _, err = conn.ReadFromUDP(res)
+			fmt.Println("here")
+
 			if err != nil {
 				fmt.Println("Error receiving:", err)
 				return
