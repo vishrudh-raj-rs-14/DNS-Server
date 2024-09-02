@@ -73,7 +73,7 @@ func main() {
 				return
 			}
 			res := make([]byte, 512)
-			_, _, err = conn.ReadFromUDP(res)
+			_ , err = conn.Read(res)
 			if err != nil {
 				fmt.Println("Error receiving:", err)
 				return
