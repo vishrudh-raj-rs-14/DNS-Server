@@ -58,8 +58,8 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: uint8(rcode),
-			QDCount: dnsMessage.Header.QDCount,
-			ANCount: dnsMessage.Header.QDCount,
+			QDCount: dnsQuery.Header.QDCount,
+			ANCount: dnsQuery.Header.QDCount,
 			NSCount: 0,
 			ARCount: 0,
 		}
