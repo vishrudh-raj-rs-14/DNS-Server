@@ -40,16 +40,16 @@ func main() {
 	
 		receivedData := string(buf[:size])
 		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
-	
+		dnsQuery := dns.ParseDNSMessage(buf);
 		// Create an empty response
 		dnsMessage := dns.DNSMessage{}
 		dnsMessage.Header = dns.Header{
-			ID: 1234,
+			ID: dnsQuery.Header.ID,
 			QR: 1,
-			OpCode: 0,
+			OpCode: dnsQuery.Header.OpCode,
 			AA: 0,
 			TC: 0,
-			RD: 0,
+			RD: dnsQuery.Header.RD,
 			RA: 0,
 			Z: 0,
 			RCode: 0,
@@ -58,19 +58,19 @@ func main() {
 			NSCount: 0,
 			ARCount: 0,
 		}
-		dnsMessage.Question = dns.Question{
-			Question: "codecrafters.io",
+		dnsMessage.Question = []dns.Question{{
+			Question: dnsQuery.Question[0].Question,
 			Type: 1,
 			Class: 1,
-			
+		},	
 		}
-		dnsMessage.Answer = dns.Answer{
+		dnsMessage.Answer = []dns.Answer{{
 			Domain: "codecrafters.io",
 			Type: 1,
 			Class: 1,
 			TTL:60,
 			Len:4,
-			Data:"8.8.8.8",
+			Data:"8.8.8.8",},
 		}
 		response := dnsMessage.ParseMsg();
 		

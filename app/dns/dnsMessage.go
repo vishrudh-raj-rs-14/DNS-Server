@@ -7,8 +7,8 @@ import (
 
 type DNSMessage struct {
 	Header Header;
-	Question Question;
-	Answer Answer;
+	Question []Question;
+	Answer []Answer;
 	Authority Authority;
 }
 
@@ -58,31 +58,31 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
 
 	//Question
-	stringEncoding := encodeString(msg.Question.Question);
+	stringEncoding := encodeString(msg.Question[0].Question);
 	buf = append(buf, stringEncoding...);
 	byteArray := make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question.Type))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[0].Type))
 	buf = append(buf, byteArray...)
 	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question.Class))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question[0].Class))
 	buf = append(buf, byteArray...)
 
 	//Answer
-	stringEncoding = encodeString(msg.Answer.Domain);
+	stringEncoding = encodeString(msg.Answer[0].Domain);
 	buf = append(buf, stringEncoding...);
 	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Type))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Type))
 	buf = append(buf, byteArray...)
 	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Class))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Class))
 	buf = append(buf, byteArray...)
 	byteArray = make([]byte, 4) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.TTL))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].TTL))
 	buf = append(buf, byteArray...)
 	byteArray = make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer.Len))
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Answer[0].Len))
 	buf = append(buf, byteArray...)
-	buf = append(buf, encodeData(msg.Answer.Data)...)
+	buf = append(buf, encodeData(msg.Answer[0].Data)...)
     return buf
 }
 
@@ -111,4 +111,83 @@ func encodeData(domain string) []byte{
 		}
 	}
 	return res;
+}
+
+func parseDNSHeader(data []byte) Header {
+    return Header{
+        ID:      binary.BigEndian.Uint16(data[0:2]),
+        QR:      data[2] >> 7,
+        OpCode:  (data[2] >> 3) & 0xF,
+        AA:      (data[2] >> 2) & 0x1,
+        TC:      (data[2] >> 1) & 0x1,
+        RD:      data[2] & 0x1,
+        RA:      data[3] >> 7,
+        Z:       (data[3] >> 4) & 0x7,
+        RCode:   data[3] & 0xF,
+        QDCount: binary.BigEndian.Uint16(data[4:6]),
+        ANCount: binary.BigEndian.Uint16(data[6:8]),
+        NSCount: binary.BigEndian.Uint16(data[8:10]),
+        ARCount: binary.BigEndian.Uint16(data[10:12]),
+    }
+}
+
+func parseDNSQuestion(data []byte, offset int) (Question, int) {
+    qName, newOffset := parseQName(data, offset)
+    qType := int(binary.BigEndian.Uint16(data[newOffset : newOffset+2]))
+    qClass := int(binary.BigEndian.Uint16(data[newOffset+2 : newOffset+4]))
+    return Question{Question: qName, Type: qType, Class: qClass}, newOffset + 4
+}
+
+func parseQName(data []byte, offset int) (string, int) {
+    var qName string
+    for {
+        length := int(data[offset])
+        if length == 0 {
+            break
+        }
+        offset++
+        qName += string(data[offset:offset+length]) + "."
+        offset += length
+    }
+    return qName, offset + 1
+}
+
+func parseDNSAnswer(data []byte, offset int) (Answer, int) {
+    name, newOffset := parseQName(data, offset)
+    ansType := int(binary.BigEndian.Uint16(data[newOffset : newOffset+2]))
+    ansClass := int(binary.BigEndian.Uint16(data[newOffset+2 : newOffset+4]))
+    ttl := int(binary.BigEndian.Uint32(data[newOffset+4 : newOffset+8]))
+    rdLength := int(binary.BigEndian.Uint16(data[newOffset+8 : newOffset+10]))
+    rData := string(data[newOffset+10 : newOffset+10+int(rdLength)])
+    return Answer{
+        Domain:     name,
+        Type:     ansType,
+        Class:    ansClass,
+        TTL:      ttl,
+        Len: rdLength,
+        Data:    rData,
+    }, newOffset + 10 + int(rdLength)
+}
+
+func ParseDNSMessage(data []byte) DNSMessage {
+    header := parseDNSHeader(data)
+    offset := 12
+
+    // Parse questions
+    questions := make([]Question, header.QDCount)
+    for i := 0; i < int(header.QDCount); i++ {
+        questions[i], offset = parseDNSQuestion(data, offset)
+    }
+
+    // Parse answers
+    answers := make([]Answer, header.ANCount)
+    for i := 0; i < int(header.ANCount); i++ {
+        answers[i], offset = parseDNSAnswer(data, offset)
+    }
+
+    return DNSMessage{
+        Header:    header,
+        Question: questions,
+        Answer:   answers,
+    }
 }
