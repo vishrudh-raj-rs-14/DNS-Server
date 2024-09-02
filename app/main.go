@@ -68,7 +68,7 @@ func main() {
 			// if(dnsQueryCopy.Question[0].Question=="def."){
 			// 	dnsQueryCopy.Question[0].Question = "def.longassdomainname.com"
 			// }
-			fmt.Println((dnsQueryCopy.Question[0].Question))
+			// fmt.Println((dnsQueryCopy.Question[0].Question))
 
 			req := dnsQueryCopy.ParseMsg()
 			_, err := conn.Write(req);
@@ -83,12 +83,12 @@ func main() {
 				return
 			}
 			resVal := dns.ParseDNSMessage(res);
-			fmt.Println(resVal.Header.QDCount, " - ", resVal.Header.ANCount)
-			if(len(resVal.Answer)>0){
-				fmt.Println(resVal.Answer[0].Domain, resVal.Answer[0].Data)
-			}else{
-				fmt.Println("empty")
-			}
+			// fmt.Println(resVal.Header.QDCount, " - ", resVal.Header.ANCount)
+			// if(len(resVal.Answer)>0){
+			// 	fmt.Println(resVal.Answer[0].Domain, resVal.Answer[0].Data)
+			// }else{
+			// 	fmt.Println("empty")
+			// }
 			dnsMessage.Answer = append(dnsMessage.Answer, resVal.Answer...)
 			time.Sleep(500*time.Millisecond)
 		}
