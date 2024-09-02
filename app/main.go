@@ -58,7 +58,7 @@ func main() {
 		dnsMessage := dns.DNSMessage{}
 		dnsMessage.Answer = []dns.Answer{
 		}
-		for i:=0;i<int(dnsQuery.Header.QDCount);i++{
+		for i:=0;i<len(dnsQuery.Question);i++{
 			dnsQueryCopy := dnsQuery;
 			dnsQueryCopy.Question = dnsQuery.Question[i:i+1]
 			dnsQueryCopy.Header.QDCount = 1;
