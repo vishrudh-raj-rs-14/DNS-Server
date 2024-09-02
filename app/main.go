@@ -63,13 +63,13 @@ func main() {
 			ARCount: 0,
 		}
 		dnsMessage.Question = []dns.Question{{
-			Question: "codecrafters.io",
+			Question: dnsQuery.Question[0].Question,
 			Type: 1,
 			Class: 1,
 		},	
 		}
 		dnsMessage.Answer = []dns.Answer{{
-			Domain: "codecrafters.io",
+			Domain: dnsQuery.Question[0].Question,
 			Type: 1,
 			Class: 1,
 			TTL:60,
