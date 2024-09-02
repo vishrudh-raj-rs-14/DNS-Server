@@ -57,24 +57,28 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: uint8(rcode),
-			QDCount: 1,
-			ANCount: 1,
+			QDCount: uint16(len(dnsQuery.Question)),
+			ANCount: uint16(len(dnsQuery.Question)),
 			NSCount: 0,
 			ARCount: 0,
 		}
-		dnsMessage.Question = []dns.Question{{
-			Question: dnsQuery.Question[0].Question,
-			Type: 1,
-			Class: 1,
-		},	
+		dnsMessage.Question = []dns.Question{
 		}
-		dnsMessage.Answer = []dns.Answer{{
-			Domain: dnsQuery.Question[0].Question,
-			Type: 1,
-			Class: 1,
-			TTL:60,
-			Len:4,
-			Data:"8.8.8.8",},
+		for i:=0;i<len(dnsQuery.Question);i++{
+			dnsMessage.Question = append(dnsMessage.Question, dns.Question{
+				Question: dnsQuery.Question[i].Question,
+				Type: 1,
+				Class: 1,
+			},)	
+		}
+		for i:=0;i<len(dnsQuery.Question);i++{
+			dnsMessage.Answer = append(dnsMessage.Answer, dns.Answer{
+				Domain: dnsQuery.Answer[i].Domain,
+				Type: 1,
+				Class: 1,
+				TTL:60,
+				Len:4,
+				Data:"8.8.8.8",},)	
 		}
 		response := dnsMessage.ParseMsg();
 		
