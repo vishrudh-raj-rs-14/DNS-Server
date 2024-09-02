@@ -58,6 +58,7 @@ func main() {
 			dnsQueryCopy := dnsQuery;
 			dnsQueryCopy.Question = dnsQuery.Question[i:i+1]
 			dnsQueryCopy.Header.QDCount = 1;
+			fmt.Println(dnsQueryCopy)
 			req := dnsQueryCopy.ParseMsg()
 			_, err := conn.Write(req);
 			if(err!=nil){
