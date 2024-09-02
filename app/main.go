@@ -17,7 +17,7 @@ func main() {
 
 	// Uncomment this block to pass the first stage
 	Resolver := flag.String("resolver", "8.8.8.8:80", "resolver directory")
-	fmt.Println("resolver - ", Resolver)
+	fmt.Println("resolver - ", *Resolver)
 	flag.Parse()
 	resolverUdp, err := net.ResolveUDPAddr("udp", *Resolver)
 	if err != nil {
@@ -51,7 +51,7 @@ func main() {
 		}
 	
 		receivedData := string(buf[:size])
-		fmt.Printf("Received %d bytes from %s: %s\n", size, source, receivedData)
+		fmt.Println("Received %d bytes from %s: %s\n", size, source, receivedData)
 		dnsQuery := dns.ParseDNSMessage(buf);
 		fmt.Println("here1")
 		// Create an empty response

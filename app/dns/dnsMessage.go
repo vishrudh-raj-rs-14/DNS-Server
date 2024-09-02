@@ -2,7 +2,6 @@ package dns
 
 import (
 	"encoding/binary"
-	"fmt"
 	"strings"
 )
 
@@ -72,7 +71,6 @@ func (msg *DNSMessage) ParseMsg() []byte {
 
 	//Answer
 	for i:=0;i<int(msg.Header.QDCount);i++{
-		fmt.Println(msg.Answer[0])
 		stringEncoding := encodeString(msg.Answer[i].Domain);
 		buf = append(buf, stringEncoding...);
 		byteArray := make([]byte, 2) 
