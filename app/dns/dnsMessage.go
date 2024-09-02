@@ -2,7 +2,6 @@ package dns
 
 import (
 	"encoding/binary"
-	"fmt"
 	"strings"
 )
 
@@ -190,14 +189,12 @@ func ParseDNSMessage(data []byte) DNSMessage {
     questions := make([]Question, header.QDCount)
     for i := 0; i < int(header.QDCount); i++ {
 		questions[i], offset = parseDNSQuestion(data, offset)
-		fmt.Println("Q", questions[i].Question)
     }
 
     // Parse answers
     answers := make([]Answer, header.ANCount)
     for i := 0; i < int(header.ANCount); i++ {
         answers[i], offset = parseDNSAnswer(data, offset)
-		fmt.Println("A", answers[i].Domain)
 
     }
 
