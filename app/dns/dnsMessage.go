@@ -29,6 +29,9 @@ type Header struct {
     ARCount          uint16 // Number of resource records in the Additional Records section
 }
 type Question struct{
+	Question string;
+	Class int;
+	Type int;
 
 }
 type Answer struct {
@@ -47,11 +50,13 @@ func (msg *DNSMessage) ParseMsg() []byte {
     binary.BigEndian.PutUint16(buf[6:8], msg.Header.ANCount)
     binary.BigEndian.PutUint16(buf[8:10], msg.Header.NSCount)
     binary.BigEndian.PutUint16(buf[10:12], msg.Header.ARCount)
-	stringEncoding := encodeString("codecrafters.io");
+	stringEncoding := encodeString(msg.Question.Question);
 	buf = append(buf, stringEncoding...);
 	byteArray := make([]byte, 2) 
-	binary.BigEndian.PutUint16(byteArray, 1)
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question.Type))
 	buf = append(buf, byteArray...)
+	byteArray = make([]byte, 2) 
+	binary.BigEndian.PutUint16(byteArray, uint16(msg.Question.Class))
 	buf = append(buf, byteArray...)
     return buf
 }

@@ -53,12 +53,16 @@ func main() {
 			RA: 0,
 			Z: 0,
 			RCode: 0,
-			QDCount: 0,
+			QDCount: 1,
 			ANCount: 0,
 			NSCount: 0,
 			ARCount: 0,
 		}
-		
+		dnsMessage.Question = dns.Question{
+			Question: "codecrafters.io",
+			Type: 1,
+			Class: 1,
+		}
 		response := dnsMessage.ParseMsg();
 		
 		_, err = udpConn.WriteToUDP(response, source)
